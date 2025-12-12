@@ -86,4 +86,6 @@ h = stepz(b,a,n);
 subplot(2,1,1); stem(n,h);
 title('Impulse Response'); xlabel('n'); ylabel('h(n)')
 
-%C
+%C --> Yes the system is stable.
+
+

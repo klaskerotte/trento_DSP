@@ -326,7 +326,8 @@ x4 = sigmult(x42,n4,x41,n4);
 
 [x4e,x4o,n4] = evenodd(x4,n4);
 
-subplot(2,2,1)
-stem(n4,x4e)
-subplot(2,2,2)
-stem(n4,x4o);
+% subplot(2,2,1)
+% stem(n4,x4e)
+% subplot(2,2,2)
+% stem(n4,x4o);
+

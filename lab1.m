@@ -239,7 +239,7 @@ xn = [-3:3];
 
 [x221,n221] = sigfold(x,xn);
 [x221,n221] = sigshift(x221,n221,1);
-[x222,n222] = sigshift(x,xn,-1)
+[x222,n222] = sigshift(x,xn,-1);
 
 [x21,n21] = sigmult(x211,n211,x212,n212);
 [x22,n22] = sigmult(x221,n221,x222,n222);
@@ -260,9 +260,73 @@ n312 = xn;
 
 x321 = cos(0.1*pi*n3);
 n321 = n3;
-[x322,n322] = sigshift(x,xn,-2)
+[x322,n322] = sigshift(x,xn,-2);
 
 [x32,n32] = sigmult(x322,n322,x321,n321);
 
 [x,xn] = sigadd(x31,n31,x32,n32);
 % stem(xn,x)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exercise 11
+
+x1 = 0:9;
+n1= 0:9;
+
+[x1e,x1o,n1] = evenodd(x1,n1);
+
+%subplot(2,2,1)
+%stem(n1,x1e)
+%subplot(2,2,2)
+%stem(n1,x1o);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+n2 = -10:10;
+
+x21 =  exp(0.1*n);
+
+x221 = stepseq(-5,-10,10);
+x222 = stepseq(10,-10,10);
+
+x22 = sigadd(x221,n2,x222,n2);
+
+x2 = sigmult(x21,n2,x22,n2);
+
+[x2e,x2o,n2] = evenodd(x2,n2);
+
+% subplot(2,2,1)
+% stem(n2,x2e)
+% subplot(2,2,2)
+% stem(n2,x2o);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+n3 = -20:20;
+x3 = cos(0.2*pi*n3 + pi/4);
+
+[x3e,x3o,n3] = evenodd(x3,n3);
+
+
+% subplot(2,2,1)
+% stem(n3,x3e)
+% subplot(2,2,2)
+% stem(n3,x3o);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+n4 = 0:100;
+
+x41 = exp(-0.05*n4);
+x421 = sin(0.1*pi*n4 + pi/3);
+x422 = stepseq(0,0,100);
+x42 = sigmult(x421,n4,x422,n4);
+
+x4 = sigmult(x42,n4,x41,n4);
+
+[x4e,x4o,n4] = evenodd(x4,n4);
+
+subplot(2,2,1)
+stem(n4,x4e)
+subplot(2,2,2)
+stem(n4,x4o);

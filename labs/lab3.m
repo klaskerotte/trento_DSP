@@ -34,8 +34,8 @@ H = 1./(1-0.9*exp(1j*-omega));
 
 N=11;
 w=0:1/1000:2*pi;
-% magX=abs(sin(N*w/2)./sin(w/2));
-% plot(w/pi,magX); grid
+magX=abs(sin(N*w/2)./sin(w/2));
+plot(w/pi,magX); grid
 
 x=ones(1,N);
 X=fft(x,N);

@@ -207,4 +207,31 @@ y = conv(h,u);
 
 % Part (d):
 y = filter(h,1,u);
-stem(n,y)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exercise 9
+
+% x[n] = u[n] − u[n − N] and h[n] = n(u[n] − u[n − M]), M ≤ N
+
+n = 0:20;
+
+N = 10;
+M = 5;
+
+x = stepseq(0,0,n(end))-stepseq(N,0,n(end));
+h = n.*(stepseq(0,0,n(end)) - stepseq(M,0,n(end)));
+
+y = conv(x,h);
+ny = 0:40;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exercise 10
+
+n = 0:100;
+
+a = [1 0.9];
+b = [1];
+
+x = stepseq(0,0,n(end)) - stepseq(10,0,n(end));
+
+y = filter(b,a,x);

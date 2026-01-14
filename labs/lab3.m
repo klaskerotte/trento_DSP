@@ -8,6 +8,12 @@ n = nstart:nend;
 delta = [1*((n-n0)==0)];
 end
 
+function [y,ny] = sigfold(x,nx);
+ny = -fliplr(nx);
+y = fliplr(x);
+end
+
+
 function [y] = fastconv(x,h)
 % Fast convolution using FFT
 % --------------------------------------------------------------
@@ -211,6 +217,49 @@ x2 = n.*((0.9).^n).*(stepseq(0,-50,50)-stepseq(21,-50,50));
 x2 = circshift(x2,-20,512);
 x2f = fft(x2,512);
 
-omega = linspace(0,2*pi,512);
+omega = linspace(0,pi,512);
 
-plot(omega,abs(x1f))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exercise 9
+
+n = 0:10;
+x = 10*0.7.^n;
+periods = 11;
+
+base = ones(length(x),periods);
+[y,ny] = sigfold(x,n);
+ythilde = base.*y';
+ythilde = ythilde(:);
+
+ythilde_f = fft(ythilde,512);
+
+omega = linspace(0,pi,512)./pi;
+% plot(omega,imag(ythilde_f))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exercise 10
+
+n = 0:300;
+x = cos(pi.*n/5) + sin(n);
+
+xf = fft(x,1000);
+omega = linspace(0,pi,1000)./pi;
+
+% plot(omega,abs(xf))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sandbox
+
+
+
+n = -1:4;
+x = [1 2 3 4 5];
+x = circshift(x,-1);
+
+xf = fft(x,512);
+omega = linspace(0,pi,512);
+subplot(2,1,1)
+plot(omega,abs(xf))
+subplot(2,1,2)
+plot(omega,angle(xf))

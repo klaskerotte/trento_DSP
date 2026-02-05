@@ -112,7 +112,7 @@ N = 51;
 h_rect = ones(1,N);
 h_hamming = hamming(N);
 h_blackman = blackman(N);
-wtest = linspace(-pi,pi,1001);
+w = linspace(-pi,pi,1001);
 
 [H_rect,wrect] = zerophase(h_rect,1,w);
 [H_hamming, whamming] = zerophase(h_hamming,1,w);
@@ -149,11 +149,13 @@ w = linspace(-pi,pi,1024);
 N = 50;
 n = -N/2:N/2;
 
-h_rect = ones(1,N+1);
-h_hamming = hamming(N+1);
-h_blackman = blackman(N+1);
-
 h_lp = wc*sinc(wc*n);
+
+h_rect = ones(1,length(h_lp));
+h_hamming = hamming(length(h_lp)).';
+h_blackman = blackman(length(h_lp)).';
+
+
 
 % Apply window
 x1 = h_rect.*h_lp;
@@ -165,18 +167,145 @@ x3 = h_blackman.*h_lp;
 [X2,w2] = zerophase(x2,1,w);
 [X3,w3] = zerophase(x3,1,w);
 
-sgtitle('Amplitude responses')
-subplot(211)
-title('Ideal lowpass without specific windows')
-plot(wh/pi,H_lp)
-xlabel('wh/pi')
-ylabel('|H_{lp}(jw)|')
-subplot(212)
-title('Lowpass windowed with specific windows')
+% sgtitle('Amplitude responses')
+% subplot(211)
+% title('Ideal lowpass without specific windows')
+% plot(wh/pi,H_lp)
+% xlabel('wh/pi')
+% ylabel('|H_{lp}(jw)|')
+% subplot(212)
+% title('Lowpass windowed with specific windows')
+% hold on
+% plot(w1/pi,(X1))
+% plot(w2/pi,(X2))
+% plot(w3/pi,(X3))
+% hold off
+% xlabel('w/pi')
+% ylabel('|X_i(jw)|')
+
+%% Exercise 7
+
+N = 100;
+n = -N/2:N/2-1;
+
+wc1 = (pi/2)/pi;
+wc2 = (pi/3)/pi;
+w = linspace(0,pi,1024);
+
+h_lp1 = wc1*sinc(wc1*n);
+h_lp2 = wc2*sinc(wc2*n);
+
+[H_lp1,w1] = freqz(h_lp1,1,w);
+[H_lp2,w2] = freqz(h_lp2,1,w);
+
+H_hp = 1 - abs(H_lp1);
+H_sb = abs(H_lp1)-abs(H_lp2);
+H_bp = 1-abs(H_sb);
+
+%% Exercise 8
+
+N = 50;
+wc = (pi/2)/pi;
+n = 0:50;
+w = linspace(0,pi,1024);
+[h_lp,a_lp] = fir1(N,wc,"low");
+[h_lp_blackman, a_lp_blackman] = fir1(N,wc,blackman(N+1),'low');
+
+[H_lp,w] = freqz(h_lp,1,w);
+[H_lp_blackman,w] = freqz(h_lp_blackman,1,w);
+
+% hold on
+% plot(w/pi,20*log10(abs(H_lp)))
+% plot(w/pi,20*log10(abs(H_lp_blackman)))
+% hold off
+
+%% Exercise 9
+
+N = 50;
+wc = (pi/2)/pi;
+n = 0:50;
+w = linspace(0,pi,1024);
+
+delta = 0.05;
+f = [0 wc wc 1];
+m = [1 1 0 0];
+
+[h_lp,a_lp] = fir2(N,f,m);
+
+[H_lp, wlp] = freqz(h_lp,a_lp,w);
+
+%% Exercise 10
+
+N = 35;
+n = 0:N;
+w = linspace(0,pi,1024);
+
+f = [0 0.2 0.3 0.7 0.8 1];
+m = [0 0 1 1 0 0];
+
+[h_pb, a_pb] = firpm(N,f,m);
+
+[H_pb,wpb] = freqz(h_pb,a_pb,w);
+
+% subplot(211)
+% zplane(h_pb)
+% subplot(212)
+% stem(n,h_pb)
+
+%% Exercise 11
+
+wc = (pi/3)/pi;
+N = 25;
+w = linspace(0,pi,1024);
+delta = 0.05;
+
+l1 = fir1(N,wc,'low');
+l2 = fir2(N,[0 wc wc 1],[1 1 0 0]);
+l3 = firpm(N, [0 wc-delta wc+delta 1], [1 1 0 0]);
+
+L1 = freqz(l1,1,w);
+[AL1,wl1,phil1] = zerophase(l1,1,w);
+
+L2 = freqz(l2,1,w);
+[AL2,wl2,phil2] = zerophase(l2,1,w);
+
+L3 = freqz(l3,1,w);
+[AL3,wl3,phil3] = zerophase(l3,1,w);
+
+sgtitle('Amplitude/phase response and zplane')
+subplot(321)
 hold on
-plot(w1/pi,(X1))
-plot(w2/pi,(X2))
-plot(w3/pi,(X3))
-hold off
+plot(wl1,AL1)
+plot(wl2,AL2)
+plot(wl3,AL3)
 xlabel('w/pi')
-ylabel('|X_i(jw)|')
+ylabel('|L_I|(jw)')
+legend('AL1','AL2','AL3')
+hold off
+
+
+
+subplot(323)
+hold on
+plot(wl1,20*log10(abs(AL1)))
+plot(wl2,20*log10(abs(AL2)))
+plot(wl3,20*log10(abs(AL3)))
+xlabel('w/pi')
+ylabel('|L_I|(jw)')
+legend('AL1','AL2','AL3')
+hold off
+
+subplot(325)
+hold on
+plot(wl1,unwrap(phil1))
+plot(wl2,unwrap(phil2))
+plot(wl3,unwrap(phil3))
+legend('phi_1','phi_2','phi_3')
+hold off
+
+subplot(322)
+zplane(l1)
+subplot(324)
+zplane(l2)
+subplot(326)
+zplane(l3)

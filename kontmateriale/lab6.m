@@ -98,15 +98,30 @@ hold off
 
 %% Exercise 5
 
-[x Fs]= audioread('speechN.wav');
-X = freqz(x,1);
+[x Fs] = audioread('speechN.wav');
+[Xk w] = freqz(x,1,2^15);
+H = freqz(hpfilter,1,2^15);
 
 figure(5)
-plot(Fs*w/(2*pi),abs(X))
-
-% Improve resolution and zoom:
-[X1,w]=freqz(x,1,2^15);
-plot(Fs*w(1:500)/(2*pi),abs(X1(1:500)))
-
-y = filter(TESTHP,1,x)
+subplot(311)
+plot([0:length(x)-1],x)
+subplot(312)
+plot(Fs*w(1:500)/(2*pi),abs(Xk(1:500)))
+subplot(313)
+y = filter(hpfilter,1,x);
 plot([0:length(y)-1],y)
+
+%% Exercise 6
+
+[x Fs] = audioread('C:\Users\samuel\Desktop\NuclearLaunchCodes\DSP_trento\kontmateriale\berglN.wav');
+[X w] = freqz(x,1,2^15);
+
+figure(6)
+subplot(311)
+plot(Fs*w/(2*pi),abs(X));
+subplot(312)
+plot([0:length(x)-1],x)
+subplot(313)
+y = filter(lpfilter,1,x);
+plot([0:length(y)-1],y)
+
